@@ -48,7 +48,7 @@ export default class App extends Component {
             <Route
               path="/TodosListPage"
               exact
-              render={(routerProps) => <TodosListPage {...routerProps} />}
+              render={(routerProps) => <TodosListPage user={this.state.user}{...routerProps} />}
             />
           </Switch>
         </Router>

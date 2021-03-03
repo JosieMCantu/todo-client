@@ -21,6 +21,34 @@ export async function loginUser(email, password) {
     return response.body;
 }
 
+export async function addTodo(todo, token) {
+
+    const response = await request
+        .post(`${URL}/api/todos`)
+        .set('Authorization', token)
+        .send({ todo });
+
+    return response.body;
+}
+
+export async function completedTodo(todoId, token) {
+
+    const response = await request
+        .post(`${URL}/api/todos/${todoId}`)
+        .set('Authorization', token)
+
+    return response.body;
+}
+
+export async function getTodo(token) {
+
+    const response = await request
+        .get(`${URL}/api/todos`)
+        .set('Authorization', token)
+
+    return response.body;
+}
+
 export function userInLocalStorage(user) {
     localStorage.setItem(USER, JSON.stringify(user));
 }
