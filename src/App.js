@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute.js';
 import LoginPage from './AuthPages/LoginPage.js';
 import HomePage from './Home/Home.js';
 import Header from './components/Header.js';
@@ -19,16 +20,20 @@ export default class App extends Component {
   };
 
   handleUserChange = (user) => {
-
     this.setState({ user });
     userInLocalStorage(user);
   }
+  handleLogout = () => {
+    this.handlerUserChange();
+  }
 
   render() {
+    const { user } = this.state;
     return (
       <div>
         <Router>
-          <Header />
+          <Header
+            user={this.state.user} handleLogout={this.handleLogout} />
           <Switch>
             <Route
               path="/"
@@ -38,16 +43,17 @@ export default class App extends Component {
             <Route
               path="/LoginPage"
               exact
-              render={(routerProps) => <LoginPage handleUserChange={this.state} {...routerProps} />}
+              render={(routerProps) => <LoginPage handleUserChange={this.handleUserChange} {...routerProps} />}
             />
             <Route
               path="/SignupPage"
               exact
               render={(routerProps) => <SignupPage handleUserChange={this.handleUserChange}{...routerProps} />}
             />
-            <Route
+            <PrivateRoute
               path="/TodosListPage"
               exact
+              token={user && user.token}
               render={(routerProps) => <TodosListPage user={this.state.user}{...routerProps} />}
             />
           </Switch>

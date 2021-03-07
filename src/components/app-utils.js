@@ -1,6 +1,6 @@
 import request from 'superagent';
 
-const URL = 'http://localhost:3001';
+const URL = 'https://floating-thicket-61805.herokuapp.com';
 export const USER = 'USER';
 
 export async function signUpUser(email, password) {
@@ -34,13 +34,13 @@ export async function addTodo(todo, token) {
 export async function completedTodo(todoId, token) {
 
     const response = await request
-        .post(`${URL}/api/todos/${todoId}`)
+        .put(`${URL}/api/todos/${todoId}`)
         .set('Authorization', token)
 
     return response.body;
 }
 
-export async function getTodo(token) {
+export async function getTodos(token) {
 
     const response = await request
         .get(`${URL}/api/todos`)
