@@ -1,30 +1,50 @@
 import React, { Component } from 'react'
-import { getTodo } from '../components/app-utils.js';
+import { addTodo, completedTodo, getTodos } from '../components/app-utils.js';
 
 export default class TodosListPage extends Component {
     state = {
-        todos: []
+        todos: [],
+        todo: ''
     }
     componentDidMount = async () => {
-        const todos = await getTodo(this.props.user.token);
+        await this.fetchTodos();
+    }
+    fetchTodos = async () => {
+        const todos = await getTodos(this.props.user.token);
         this.setState({ todos });
     }
-    handleSubmit = () => {
-
+    handleSubmit = async (e) => {
+        e.preventDefault();
+        await addTodo(this.state.todo, this.props.user.token);
+        await this.fetchTodos();
+        this.setState({ todo: '' });
     }
+    handleTodoChange = e => { this.setState({ todo: e.target.value }) }
+    handleComplete = async (todoId) => {
+        await completedTodo(todoId, this.props.user.token);
+        this.fetchTodos();
+    }
+
     render() {
         console.log(this.state.todos);
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <input value={this.state.todos} />
+                    <input value={this.state.todo} onChange={this.handleTodoChange} />
                     <button>Add a todo</button>
                 </form>
-                {this.state.todos.length && <p>'You have nothing to do'</p>}
+                {!this.state.todos.length && <p>You're all caught up!</p>}
                 {this.state.todos.map(todo =>
-                    <p>{todo.todo} : {todo.completed ? 'Finished' : 'Not finished'}</p>)}
-
-                todos list page
+                    <p
+                        key={`${todo.todo}-${todo.id}`}
+                        onClick={() => this.handleComplete(todo.id)}
+                        className={`
+                            todo ${todo.completed
+                                ? 'completed'
+                                : ''}`
+                        }>
+                        {todo.todo}
+                    </p>)}
             </div>
         )
     }
