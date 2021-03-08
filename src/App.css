@@ -60,6 +60,6 @@ label {
   background-color: pink;
 }
 
-.completed {
+.true {
   text-decoration: line-through;
 }
